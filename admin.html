@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSabaai - System Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: width 0.3s;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Prompt', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="sidebar w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex transition-all">
+        <div class="h-16 flex items-center justify-center border-b border-gray-100">
+            <span class="text-2xl font-bold text-purple-600">
+                <i class="fa-solid fa-cloud text-purple-400 mr-2"></i>Admin
+            </span>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <a href="#" onclick="showSection('dashboard')"
+                class="nav-item flex items-center space-x-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 px-4 py-3 rounded-xl transition">
+                <i class="fa-solid fa-chart-pie w-6 text-center"></i>
+                <span class="font-medium">ภาพรวม</span>
+            </a>
+            <a href="#" onclick="showSection('products')"
+                class="nav-item flex items-center space-x-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 px-4 py-3 rounded-xl transition">
+                <i class="fa-solid fa-box-open w-6 text-center"></i>
+                <span class="font-medium">จัดการสินค้า</span>
+            </a>
+            <a href="#" onclick="showSection('orders')"
+                class="nav-item flex items-center space-x-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 px-4 py-3 rounded-xl transition">
+                <i class="fa-solid fa-clipboard-list w-6 text-center"></i>
+                <span class="font-medium">คำสั่งซื้อ</span>
+            </a>
+
+            <a href="#" onclick="showSection('users')"
+                class="nav-item flex items-center space-x-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 px-4 py-3 rounded-xl transition">
+                <i class="fa-solid fa-users w-6 text-center"></i>
+                <span class="font-medium">จัดการผู้ใช้</span>
+            </a>
+
+            <a href="index.html"
+                class="flex items-center space-x-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 px-4 py-3 rounded-xl transition">
+                <i class="fa-solid fa-store w-6 text-center"></i>
+                <span class="font-medium">ไปหน้าร้านค้า</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logoutAdmin()"
+                class="w-full flex items-center justify-center space-x-2 text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl transition">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>ออกจากระบบ</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
+            <div class="md:hidden">
+                <button onclick="toggleSidebar()" class="text-gray-500 hover:text-purple-600">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+            <h1 id="page-title" class="text-xl font-bold text-gray-800">ภาพรวมระบบ</h1>
+            <div class="flex items-center space-x-3">
+                <div
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                    A
+                </div>
+                <span class="text-sm font-medium text-gray-600 hidden sm:block">Admin User</span>
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <div class="flex-1 overflow-auto p-6 relative">
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Stats Card 1 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 text-sm font-medium">ยอดขายรวม</h3>
+                            <div
+                                class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                <i class="fa-solid fa-sack-dollar"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800" id="dash-total-sales">฿0</div>
+                        <p class="text-xs text-green-500 mt-2 font-medium flex items-center">
+                            <i class="fa-solid fa-arrow-up mr-1"></i> สะสมทั้งหมด
+                        </p>
+                    </div>
+
+                    <!-- Stats Card 2 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 text-sm font-medium">คำสั่งซื้อทั้งหมด</h3>
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800" id="dash-total-orders">0</div>
+                        <p class="text-xs text-blue-500 mt-2 font-medium">รายการ</p>
+                    </div>
+
+                    <!-- Stats Card 3 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 text-sm font-medium">สินค้าในระบบ</h3>
+                            <div
+                                class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                <i class="fa-solid fa-cubes"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800" id="dash-total-products">0</div>
+                        <p class="text-xs text-purple-500 mt-2 font-medium">รายการ</p>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-50 flex justify-between items-center">
+                        <h3 class="font-bold text-gray-800">คำสั่งซื้อล่าสุด</h3>
+                        <button onclick="showSection('orders')"
+                            class="text-sm text-purple-600 font-bold hover:underline">ดูทั้งหมด</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 text-sm">
+                                    <th class="p-4 font-medium">Order ID</th>
+                                    <th class="p-4 font-medium">ลูกค้า</th>
+                                    <th class="p-4 font-medium">ยอดเงิน</th>
+                                    <th class="p-4 font-medium">สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-orders" class="text-sm text-gray-700">
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="products-section" class="section-content hidden space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <div class="relative w-full md:w-64">
+                            <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" placeholder="ค้นหาสินค้า..."
+                                class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        </div>
+                        <button onclick="openProductModal()"
+                            class="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 transition w-full md:w-auto">
+                            <i class="fa-solid fa-plus mr-2"></i> เพิ่มสินค้าใหม่
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                        id="admin-products-grid">
+                        <!-- Products Injected Here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders-section" class="section-content hidden space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 text-sm">
+                                    <th class="p-4 font-medium">Order ID</th>
+                                    <th class="p-4 font-medium">วันที่</th>
+                                    <th class="p-4 font-medium">ลูกค้า</th>
+                                    <th class="p-4 font-medium">ที่อยู่</th>
+                                    <th class="p-4 font-medium">รายการ</th>
+                                    <th class="p-4 font-medium">หลักฐาน</th>
+                                    <th class="p-4 font-medium text-right">ยอดรวม</th>
+                                    <th class="p-4 font-medium text-center">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-table" class="text-sm text-gray-700 divide-y divide-gray-100">
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="users-section" class="section-content hidden space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-50">
+                        <h3 class="font-bold text-gray-800">รายชื่อสมาชิก</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 text-sm">
+                                    <th class="p-4 font-medium">User ID</th>
+                                    <th class="p-4 font-medium">ชื่อ</th>
+                                    <th class="p-4 font-medium">อีเมล</th>
+                                    <th class="p-4 font-medium">เบอร์โทร</th>
+                                    <th class="p-4 font-medium text-center">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table" class="text-sm text-gray-700 divide-y divide-gray-100">
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Product Modal -->
+    <div id="product-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-800" id="modal-title">เพิ่มสินค้า</h3>
+                <button onclick="closeProductModal()" class="text-gray-400 hover:text-red-500"><i
+                        class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <form onsubmit="saveProduct(event)" class="p-6 space-y-4">
+                <input type="hidden" name="id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">ชื่อสินค้า</label>
+                    <input type="text" name="name" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">ราคา (บาท)</label>
+                        <input type="number" name="price" required
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">หมวดหมู่</label>
+                        <select name="category"
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                            <option value="stationery">เครื่องเขียน</option>
+                            <option value="daily">ของใช้</option>
+                            <option value="decoration">ของตกแต่ง</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">รุ่น/สี (Model)</label>
+                    <input type="text" name="model" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">รูปภาพ (URL)</label>
+                    <input type="url" name="image" required placeholder="https://..."
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none text-xs">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">รายละเอียด</label>
+                    <textarea name="description" rows="3" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none"></textarea>
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeProductModal()"
+                        class="px-4 py-2 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition">ยกเลิก</button>
+                    <button type="submit"
+                        class="px-6 py-2 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 transition">บันทึก</button>
+                    <button type="button" id="btn-delete-product" onclick="deleteProduct()"
+                        class="hidden px-4 py-2 bg-red-100 text-red-500 font-bold rounded-lg hover:bg-red-200 transition">ลบ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="order-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-800">รายละเอียดคำสั่งซื้อ</h3>
+                <button onclick="closeOrderModal()" class="text-gray-400 hover:text-red-500"><i
+                        class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto" id="order-modal-content">
+                <!-- Content injected via JS -->
+            </div>
+            <div class="p-4 border-t border-gray-100 flex justify-end">
+                <button onclick="closeOrderModal()"
+                    class="px-4 py-2 bg-gray-100 text-gray-600 font-bold rounded-lg hover:bg-gray-200 transition">ปิด</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="image-modal"
+        class="fixed inset-0 bg-black bg-opacity-80 hidden z-[60] flex items-center justify-center p-4"
+        onclick="this.classList.add('hidden')">
+        <img id="preview-image" src="" class="max-w-full max-h-full rounded-lg shadow-2xl">
+    </div>
+
+    <!-- User Edit Modal -->
+    <div id="user-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-800" id="user-modal-title">แก้ไขข้อมูลผู้ใช้</h3>
+                <button onclick="closeUserModal()" class="text-gray-400 hover:text-red-500"><i
+                        class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <form onsubmit="saveUser(event)" class="p-6 space-y-4">
+                <input type="hidden" name="id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">ชื่อ-นามสกุล</label>
+                    <input type="text" name="name" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">อีเมล</label>
+                    <input type="email" name="email" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">เบอร์โทรศัพท์</label>
+                    <input type="tel" name="phone" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">รหัสผ่าน
+                        (แก้ไขเฉพาะเมื่อต้องการเปลี่ยน)</label>
+                    <input type="text" name="password" placeholder="ใส่รหัสผ่านใหม่..."
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeUserModal()"
+                        class="px-4 py-2 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition">ยกเลิก</button>
+                    <button type="submit"
+                        class="px-6 py-2 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 transition">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
